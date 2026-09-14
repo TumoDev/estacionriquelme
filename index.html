@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estación Riquelme — Avance de Obra</title>
+<style>
+  :root {
+    --bg: #f5f6f3;
+    --panel: #ffffff;
+    --accent: #2f6b4f;
+    --accent-2: #c9722f;
+    --text: #1b1f1c;
+    --muted: #6b746e;
+    --ink: #0d1210;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+  }
+  .hero .bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.08);
+    animation: heroZoom 16s ease-in-out infinite alternate;
+  }
+  @keyframes heroZoom {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,14,11,0.55) 0%, rgba(10,14,11,0.35) 40%, rgba(10,14,11,0.85) 100%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 24px;
+    animation: fadeUp 1.1s ease both;
+  }
+  .hero img.logo {
+    height: 46px;
+    margin-bottom: 22px;
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+  }
+  .hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(32px, 8vw, 56px);
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .hero p.tag {
+    margin: 0 auto;
+    max-width: 480px;
+    font-size: clamp(15px, 3.2vw, 18px);
+    color: rgba(255,255,255,0.88);
+    line-height: 1.5;
+  }
+  .hero .scrolldown {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.75);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .hero .scrolldown svg { width: 20px; height: 20px; }
+  @keyframes bounce {
+    0%,100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- STATS STRIP ---------- */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    background: var(--ink);
+    color: #fff;
+    text-align: center;
+  }
+  .stats-strip .stat {
+    padding: 32px 12px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .stats-strip .stat:last-child { border-right: none; }
+  .stats-strip .num {
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 800;
+    color: #9fd6ba;
+  }
+  .stats-strip .label {
+    margin-top: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ---------- BEFORE / AFTER ---------- */
+  .compare-section {
+    padding: 72px 20px 60px;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .compare-section h2 {
+    font-size: clamp(24px, 5vw, 34px);
+    margin: 0 0 8px;
+    font-weight: 800;
+  }
+  .compare-section p {
+    color: var(--muted);
+    margin: 0 0 32px;
+    font-size: 15px;
+  }
+  .compare {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    max-height: 640px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+    cursor: ew-resize;
+    user-select: none;
+    touch-action: pan-y;
+  }
+  .compare img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+  .compare .after-wrap {
+    position: absolute;
+    inset: 0;
+    width: 50%;
+    overflow: hidden;
+  }
+  .compare .after-wrap img {
+    width: var(--compare-w, 100vw);
+    max-width: none;
+    height: 100%;
+  }
+  .compare .divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: #fff;
+    transform: translateX(-50%);
+    box-shadow: 0 0 0 100px rgba(0,0,0,0.001);
+  }
+  .compare .handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .compare .badge {
+    position: absolute;
+    top: 14px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+  }
+  .compare .badge.left { left: 14px; }
+  .compare .badge.right { right: 14px; }
+  .compare-hint {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ---------- TIMELINE STORY ---------- */
+  .timeline {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 20px 40px;
+  }
+  .timeline > h2 {
+    text-align: center;
+    font-size: clamp(24px, 5vw, 34px);
+    margin: 40px 0 8px;
+    font-weight: 800;
+  }
+  .timeline > p.sub {
+    text-align: center;
+    color: var(--muted);
+    margin: 0 0 40px;
+  }
+  .year-block {
+    margin-bottom: 56px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .year-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .year-block h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .year-block h3::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #dfe3de;
+  }
+  .year-block .count {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 18px;
+    font-weight: 500;
+  }
+  .year-scroll {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .year-scroll::-webkit-scrollbar { height: 6px; }
+  .year-scroll::-webkit-scrollbar-thumb { background: #d5d9d2; border-radius: 6px; }
+  .year-photo {
+    position: relative;
+    flex: 0 0 auto;
+    width: min(78vw, 340px);
+    aspect-ratio: 4/3;
+    border-radius: 12px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    cursor: pointer;
+  }
+  .year-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .year-photo:hover img { transform: scale(1.05); }
+  .year-photo .tag {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 8px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    color: #fff;
+    font-size: 12px;
+  }
+
+  /* ---------- FULL GALLERY ---------- */
+  .full-gallery-section {
+    background: var(--panel);
+    padding: 50px 20px 70px;
+    border-top: 1px solid #e6e9e3;
+  }
+  .full-gallery-section h2 {
+    text-align: center;
+    font-size: clamp(22px, 5vw, 30px);
+    margin: 0 0 6px;
+    font-weight: 800;
+  }
+  .full-gallery-section p.sub {
+    text-align: center;
+    color: var(--muted);
+    margin: 0 0 32px;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eee;
+    cursor: pointer;
+    aspect-ratio: 1/1;
+  }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+  .card:hover img { transform: scale(1.08); }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5,7,6,0.95);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 92vw;
+    max-height: 78vh;
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  }
+  .lightbox .caption {
+    color: #cfd4cf;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+  .lightbox .close, .lightbox .nav {
+    position: absolute;
+    color: #fff;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox .close { top: 20px; right: 20px; }
+  .lightbox .prev { left: 12px; top: 50%; transform: translateY(-50%); }
+  .lightbox .next { right: 12px; top: 50%; transform: translateY(-50%); }
+  .lightbox .close:hover, .lightbox .nav:hover { background: rgba(255,255,255,0.28); }
+
+  footer {
+    text-align: center;
+    padding: 34px 20px;
+    color: var(--muted);
+    font-size: 13px;
+    background: var(--panel);
+  }
+  footer img {
+    height: 26px;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <div class="bg" id="heroBg"></div>
+  <div class="hero-content">
+    <img class="logo" src="imagenes/Logo_Kawesqar_Inmobiliaria.png" alt="Kawésqar Inmobiliaria">
+    <h1>Estación Riquelme</h1>
+    <p class="tag">Recorre, en imágenes, cada etapa de la obra hasta su finalización.</p>
+  </div>
+  <div class="scrolldown">
+    <span>Desliza</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<div class="stats-strip" id="statsStrip">
+  <div class="stat"><div class="num" id="totalCount">0</div><div class="label">Fotos</div></div>
+  <div class="stat"><div class="num" id="totalMonths">0</div><div class="label">Meses de obra</div></div>
+  <div class="stat"><div class="num" id="rangeStart">—</div><div class="label">Inicio</div></div>
+  <div class="stat"><div class="num" id="rangeEnd">—</div><div class="label">Última foto</div></div>
+</div>
+
+<section class="compare-section">
+  <h2>El antes y el después</h2>
+  <p>Desliza para comparar el punto de partida con el estado actual de la obra.</p>
+  <div class="compare" id="compare">
+    <img id="compareBefore" src="" alt="Antes">
+    <div class="after-wrap" id="afterWrap">
+      <img id="compareAfter" src="" alt="Después">
+    </div>
+    <div class="divider" id="divider"></div>
+    <div class="handle" id="handle">↔</div>
+    <div class="badge left" id="badgeBefore">Inicio</div>
+    <div class="badge right" id="badgeAfter">Hoy</div>
+  </div>
+  <p class="compare-hint">Arrastra el círculo blanco hacia los lados</p>
+</section>
+
+<div class="timeline" id="timeline">
+  <h2>La historia de la obra</h2>
+  <p class="sub">Cada etapa, mes a mes, hasta la entrega final</p>
+  <div id="timelineContent"></div>
+</div>
+
+<section class="full-gallery-section">
+  <h2>Galería completa</h2>
+  <p class="sub">Todas las fotografías del proyecto en un solo lugar</p>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<div class="lightbox" id="lightbox">
+  <button class="close" id="closeBtn">✕</button>
+  <button class="nav prev" id="prevBtn">‹</button>
+  <button class="nav next" id="nextBtn">›</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="caption" id="lightboxCaption"></div>
+</div>
+
+<footer>
+  <img src="imagenes/Logo_Kawesqar_Inmobiliaria.png" alt="Kawésqar Inmobiliaria">
+  <div>Estación Riquelme · Kawésqar Inmobiliaria</div>
+</footer>
+
+<script>
+const files = [
+  "20240327_085509.jpg",
+  "20240424_122459.jpg",
+  "20240514_104513.jpg",
+  "20240514_105555.jpg",
+  "20240516_121947.jpg",
+  "20240611_161737.jpg",
+  "20240611_170907.jpg",
+  "20240612_145419.jpg",
+  "20240726_142253.jpg",
+  "20241001_121442.jpg",
+  "20241214_085935.jpg",
+  "20241214_085955.jpg",
+  "20241217_095552.jpg",
+  "20241219_165053.jpg",
+  "20241219_165140.jpg",
+  "20250121_151449.jpg",
+  "20250121_193620.jpg",
+  "20250423_112059.jpg",
+  "20250424_121443.jpg",
+  "20250429_101044.jpg",
+  "20250521_092827.jpg",
+  "20250528_165704.jpg",
+  "20250610_151048.jpg",
+  "20250611_095305.jpg",
+  "20251121_144049.jpg",
+  "20251210_112355.jpg",
+  "20260122_104937.jpg",
+  "20260402_113724.jpg",
+  "20260415_094830.jpg",
+  "20260424_154102.jpg",
+  "20260508_150348.jpg",
+  "20260706_155924.jpg",
+  "20260727_104951.jpg",
+  "20260727_111313.jpg",
+  "20260727_165204.jpg",
+  "20260730_141045.jpg",
+  "20260805_141554.jpg",
+  "20260805_141629.jpg",
+  "20260805_141759.jpg",
+  "20260805_142501.jpg",
+  "20260807_100033.jpg",
+  "20260819_142446.jpg",
+  "20260819_142955.jpg",
+  "20260823_102455.jpg",
+  "20260826_142618.jpg",
+  "20260907_112539.jpg",
+  "20260911_094815.jpg",
+  "TimePhoto_20241223_090444.jpg",
+  "TimePhoto_20251114_115533.jpg",
+  "dji_fly_20260819_142147_0_1787167937700_photo.JPG",
+  "dji_fly_20260819_142152_0_1787167951154_photo.JPG",
+  "dji_fly_20260819_142232_0_1787167964611_photo.JPG",
+  "dji_fly_20260819_143011_0_1787168054145_photo.JPG",
+  "dji_fly_20260819_143615_0_1787168113167_photo.JPG",
+  "DREN.jpg",
+  "arf.jpg"
+];
+
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+function parseDate(name) {
+  const m = name.match(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+  if (!m) return null;
+  const [, y, mo, d, h, mi] = m;
+  const monthIdx = parseInt(mo, 10) - 1;
+  if (monthIdx < 0 || monthIdx > 11) return null;
+  return {
+    date: new Date(y, monthIdx, d, h, mi),
+    label: `${d} ${MESES[monthIdx]} ${y}`,
+    year: y
+  };
+}
+
+const items = files.map(f => {
+  const parsed = parseDate(f);
+  return {
+    file: "imagenes/" + f,
+    date: parsed ? parsed.date : null,
+    label: parsed ? parsed.label : "Foto del proyecto",
+    year: parsed ? parsed.year : "Otras"
+  };
+});
+
+items.sort((a, b) => {
+  if (a.date && b.date) return a.date - b.date;
+  if (a.date) return -1;
+  if (b.date) return 1;
+  return 0;
+});
+
+// ---------- Stats ----------
+document.getElementById('totalCount').textContent = items.length;
+const dated = items.filter(i => i.date);
+if (dated.length) {
+  document.getElementById('rangeStart').textContent = dated[0].label;
+  document.getElementById('rangeEnd').textContent = dated[dated.length - 1].label;
+  const months = Math.max(1, Math.round((dated[dated.length - 1].date - dated[0].date) / (1000 * 60 * 60 * 24 * 30)));
+  document.getElementById('totalMonths').textContent = months;
+}
+
+// ---------- Hero background: best drone / latest photo ----------
+const droneShots = items.filter(i => i.file.toLowerCase().includes('dji_fly'));
+const heroPick = droneShots.length ? droneShots[droneShots.length - 1] : items[items.length - 1];
+document.getElementById('heroBg').style.backgroundImage = `url("${encodeURI(heroPick.file)}")`;
+
+// ---------- Before / After compare ----------
+const beforePick = dated.length ? dated[0] : items[0];
+const afterPick = droneShots.length ? droneShots[droneShots.length - 1] : (dated.length ? dated[dated.length - 1] : items[items.length - 1]);
+const compareBefore = document.getElementById('compareBefore');
+const compareAfter = document.getElementById('compareAfter');
+compareBefore.src = encodeURI(beforePick.file);
+compareAfter.src = encodeURI(afterPick.file);
+
+const compareEl = document.getElementById('compare');
+const afterWrap = document.getElementById('afterWrap');
+const divider = document.getElementById('divider');
+const handle = document.getElementById('handle');
+
+function setCompare(pct) {
+  pct = Math.min(96, Math.max(4, pct));
+  afterWrap.style.width = pct + '%';
+  divider.style.left = pct + '%';
+  handle.style.left = pct + '%';
+  compareAfter.style.width = (100 / (pct / 100)) + '%';
+}
+function updateFromClientX(clientX) {
+  const rect = compareEl.getBoundingClientRect();
+  const pct = ((clientX - rect.left) / rect.width) * 100;
+  setCompare(pct);
+}
+let dragging = false;
+compareEl.addEventListener('mousedown', (e) => { dragging = true; updateFromClientX(e.clientX); });
+window.addEventListener('mousemove', (e) => { if (dragging) updateFromClientX(e.clientX); });
+window.addEventListener('mouseup', () => dragging = false);
+compareEl.addEventListener('touchstart', (e) => { dragging = true; updateFromClientX(e.touches[0].clientX); }, { passive: true });
+compareEl.addEventListener('touchmove', (e) => { if (dragging) updateFromClientX(e.touches[0].clientX); }, { passive: true });
+compareEl.addEventListener('touchend', () => dragging = false);
+setCompare(50);
+
+// animate compare slider on load for a hint of interactivity
+setTimeout(() => setCompare(68), 600);
+setTimeout(() => setCompare(32), 1600);
+setTimeout(() => setCompare(50), 2600);
+
+// ---------- Timeline grouped by year ----------
+const byYear = {};
+items.forEach(item => {
+  const y = item.year || "Otras";
+  if (!byYear[y]) byYear[y] = [];
+  byYear[y].push(item);
+});
+const years = Object.keys(byYear).sort();
+const timelineContent = document.getElementById('timelineContent');
+const flatIndexMap = [];
+
+years.forEach(year => {
+  const group = byYear[year];
+  const block = document.createElement('div');
+  block.className = 'year-block';
+  const scrollId = `yr-${year}`;
+  block.innerHTML = `
+    <h3>${year}</h3>
+    <div class="count">${group.length} foto${group.length === 1 ? '' : 's'}</div>
+    <div class="year-scroll" id="${scrollId}"></div>
+  `;
+  timelineContent.appendChild(block);
+  const scrollEl = block.querySelector('.year-scroll');
+  group.forEach(item => {
+    const globalIdx = items.indexOf(item);
+    const photo = document.createElement('div');
+    photo.className = 'year-photo';
+    photo.innerHTML = `<img src="${encodeURI(item.file)}" alt="${item.label}" loading="lazy"><div class="tag">${item.label}</div>`;
+    photo.addEventListener('click', () => openLightbox(globalIdx));
+    scrollEl.appendChild(photo);
+  });
+});
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.year-block').forEach(el => revealObserver.observe(el));
+
+// ---------- Full gallery grid ----------
+const gallery = document.getElementById('gallery');
+items.forEach((item, idx) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<img src="${encodeURI(item.file)}" alt="${item.label}" loading="lazy">`;
+  card.addEventListener('click', () => openLightbox(idx));
+  gallery.appendChild(card);
+});
+
+// ---------- Lightbox ----------
+let current = 0;
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxCaption = document.getElementById('lightboxCaption');
+
+function openLightbox(idx) {
+  current = idx;
+  showCurrent();
+  lightbox.classList.add('open');
+}
+function showCurrent() {
+  const item = items[current];
+  lightboxImg.src = encodeURI(item.file);
+  lightboxCaption.textContent = `${item.label} — ${current + 1} / ${items.length}`;
+}
+function closeLightbox() { lightbox.classList.remove('open'); }
+function nextImg() { current = (current + 1) % items.length; showCurrent(); }
+function prevImg() { current = (current - 1 + items.length) % items.length; showCurrent(); }
+
+document.getElementById('closeBtn').addEventListener('click', closeLightbox);
+document.getElementById('nextBtn').addEventListener('click', nextImg);
+document.getElementById('prevBtn').addEventListener('click', prevImg);
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') nextImg();
+  if (e.key === 'ArrowLeft') prevImg();
+});
+</script>
+
+</body>
+</html>
