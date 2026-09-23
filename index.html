@@ -65,8 +65,12 @@
   .hero img.logo {
     height: 108px;
     margin-bottom: 22px;
-    filter: brightness(0) invert(1);
-    opacity: 0.95;
+    filter:
+      drop-shadow(1px 0 0 #fff)
+      drop-shadow(-1px 0 0 #fff)
+      drop-shadow(0 1px 0 #fff)
+      drop-shadow(0 -1px 0 #fff)
+      drop-shadow(0 4px 20px rgba(0,0,0,0.35));
   }
   .hero h1 {
     margin: 0 0 10px;
@@ -319,6 +323,29 @@
     font-size: 12px;
   }
 
+  /* ---------- VIDEO ---------- */
+  .video-section {
+    background: #fff;
+    padding: 50px 20px;
+    text-align: center;
+  }
+  .video-section h2 {
+    font-size: clamp(22px, 5vw, 30px);
+    margin: 0 0 24px;
+    font-weight: 800;
+  }
+  .video-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .video-wrap iframe {
+    display: block;
+    border: 0;
+  }
+
   /* ---------- FULL GALLERY ---------- */
   .full-gallery-section {
     background: var(--panel);
@@ -488,7 +515,7 @@
 <section class="hero" id="hero">
   <div class="bg" id="heroBg"></div>
   <div class="hero-content">
-    <img class="logo" src="imagenes/Logo_Kawesqar_Inmobiliaria.png" alt="Kawésqar Inmobiliaria">
+    <img class="logo" src="imagenes/Logo_Kawesqar.png" alt="Kawésqar Inmobiliaria">
     <h1>Estación Riquelme</h1>
     <p class="tag">Recorre, en imágenes, cada etapa de la obra hasta su finalización.</p>
   </div>
@@ -555,6 +582,13 @@
   <div id="timelineContent"></div>
 </div>
 
+<section class="video-section">
+  <h2>Video del proyecto</h2>
+  <div class="video-wrap">
+    <iframe src="https://drive.google.com/file/d/1JWFIaj6VvMeslP6tDheUWs0VhiyZwIOr/preview" width="100%" height="480" allow="autoplay" allowfullscreen></iframe>
+  </div>
+</section>
+
 <section class="full-gallery-section">
   <h2>Galería completa</h2>
   <p class="sub">Todas las fotografías del proyecto en un solo lugar</p>
@@ -570,7 +604,7 @@
 </div>
 
 <footer>
-  <img src="imagenes/Logo_Kawesqar_Inmobiliaria.png" alt="Kawésqar Inmobiliaria">
+  <img src="imagenes/Logo_Kawesqar.png" alt="Kawésqar Inmobiliaria">
   <div>Estación Riquelme · Kawésqar Inmobiliaria</div>
 </footer>
 
@@ -631,7 +665,38 @@ const files = [
   "dji_fly_20260819_143011_0_1787168054145_photo.JPG",
   "dji_fly_20260819_143615_0_1787168113167_photo.JPG",
   "DREN.jpg",
-  "arf.jpg"
+  "arf.jpg",
+  "1.jpeg",
+  "2.jpeg",
+  "3.jpeg",
+  "4.jpeg",
+  "5.jpeg",
+  "6.jpeg",
+  "7.jpeg",
+  "8.jpeg",
+  "9.jpeg",
+  "10.jpeg",
+  "11.jpeg",
+  "12.jpeg",
+  "13.jpeg",
+  "14.jpeg",
+  "15.jpeg",
+  "16.jpeg",
+  "17.jpeg",
+  "18.jpeg",
+  "19.jpeg",
+  "20.jpeg",
+  "21.jpeg",
+  "22.jpeg",
+  "23.jpeg",
+  "24.jpeg",
+  "25.jpeg",
+  "26.jpeg",
+  "27.jpeg",
+  "28.jpeg",
+  "29.jpeg",
+  "30.jpeg",
+  "31.jpeg"
 ];
 
 const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
