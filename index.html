@@ -180,13 +180,14 @@
   .compare .after-wrap {
     position: absolute;
     inset: 0;
-    width: 50%;
+    width: 100%;
+    clip-path: inset(0 50% 0 0);
     overflow: hidden;
   }
-  .compare .after-wrap img {
-    width: var(--compare-w, 100vw);
-    max-width: none;
-    height: 100%;
+  .compare.animating .after-wrap,
+  .compare.animating .divider,
+  .compare.animating .handle {
+    transition: clip-path 1.1s ease-in-out, left 1.1s ease-in-out;
   }
   .compare .divider {
     position: absolute;
@@ -335,14 +336,21 @@
     font-weight: 800;
   }
   .video-wrap {
+    position: relative;
+    width: 100%;
     max-width: 900px;
+    aspect-ratio: 16 / 9;
     margin: 0 auto;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   }
   .video-wrap iframe {
+    position: absolute;
+    inset: 0;
     display: block;
+    width: 100%;
+    height: 100%;
     border: 0;
   }
 
@@ -585,7 +593,7 @@
 <section class="video-section">
   <h2>Video del proyecto</h2>
   <div class="video-wrap">
-    <iframe src="https://drive.google.com/file/d/1JWFIaj6VvMeslP6tDheUWs0VhiyZwIOr/preview" width="100%" height="480" allow="autoplay" allowfullscreen></iframe>
+    <iframe src="https://drive.google.com/file/d/1JWFIaj6VvMeslP6tDheUWs0VhiyZwIOr/preview" allow="autoplay" allowfullscreen></iframe>
   </div>
 </section>
 
@@ -747,8 +755,8 @@ const heroPick = droneShots.length ? droneShots[droneShots.length - 1] : items[i
 document.getElementById('heroBg').style.backgroundImage = `url("${encodeURI(heroPick.file)}")`;
 
 // ---------- Before / After compare ----------
-const beforePick = dated.length ? dated[0] : items[0];
-const afterPick = droneShots.length ? droneShots[droneShots.length - 1] : (dated.length ? dated[dated.length - 1] : items[items.length - 1]);
+const afterPick = dated.length ? dated[0] : items[0];
+const beforePick = droneShots.length ? droneShots[droneShots.length - 1] : (dated.length ? dated[dated.length - 1] : items[items.length - 1]);
 const compareBefore = document.getElementById('compareBefore');
 const compareAfter = document.getElementById('compareAfter');
 compareBefore.src = encodeURI(beforePick.file);
@@ -761,10 +769,9 @@ const handle = document.getElementById('handle');
 
 function setCompare(pct) {
   pct = Math.min(96, Math.max(4, pct));
-  afterWrap.style.width = pct + '%';
+  afterWrap.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
   divider.style.left = pct + '%';
   handle.style.left = pct + '%';
-  compareAfter.style.width = (100 / (pct / 100)) + '%';
 }
 function updateFromClientX(clientX) {
   const rect = compareEl.getBoundingClientRect();
@@ -780,10 +787,16 @@ compareEl.addEventListener('touchmove', (e) => { if (dragging) updateFromClientX
 compareEl.addEventListener('touchend', () => dragging = false);
 setCompare(50);
 
-// animate compare slider on load for a hint of interactivity
+// animate compare slider smoothly on load for a hint of interactivity
+compareEl.classList.add('animating');
 setTimeout(() => setCompare(68), 600);
-setTimeout(() => setCompare(32), 1600);
-setTimeout(() => setCompare(50), 2600);
+setTimeout(() => setCompare(32), 2000);
+setTimeout(() => setCompare(50), 3400);
+setTimeout(() => compareEl.classList.remove('animating'), 4200);
+
+function stopDemoAnimation() { compareEl.classList.remove('animating'); }
+compareEl.addEventListener('mousedown', stopDemoAnimation);
+compareEl.addEventListener('touchstart', stopDemoAnimation, { passive: true });
 
 // ---------- Timeline grouped by year ----------
 const byYear = {};
